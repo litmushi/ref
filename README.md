@@ -1,1 +1,1 @@
-Almost useless program used for refernce =)
+Almost useless program used for reference =)
