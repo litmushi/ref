@@ -24,10 +24,10 @@ class ContactClass {
         std::println("Name: {}, Phone: {}", name, phone_number);
     }
 
-    [[nodiscard]] const std::string& get_name() const {
+    [[nodiscard]] const std::string &get_name() const {
         return name;
     }
-    [[nodiscard]] const std::string& get_phone_number() const {
+    [[nodiscard]] const std::string &get_phone_number() const {
         return phone_number;
     }
 
@@ -35,11 +35,11 @@ class ContactClass {
         phone_number = std::move(new_phone_number);
     }
 
-    bool operator<=>(const ContactClass&) const = delete;
-    bool operator==(const ContactClass&) const  = default;
+    bool operator<=>(const ContactClass &) const = delete;
+    bool operator==(const ContactClass &) const = default;
 };
 
-void add_contact(std::vector<ContactClass>& contact_list) {
+void add_contact(std::vector<ContactClass> &contact_list) {
     std::string name_input, phone_num_input;
 
     std::print("Please enter name: ");
@@ -52,13 +52,13 @@ void add_contact(std::vector<ContactClass>& contact_list) {
     std::println("Contact {} added successfully!", name_input);
 }
 
-void view_contacts(const std::vector<ContactClass>& contact_list) {
+void view_contacts(const std::vector<ContactClass> &contact_list) {
     if (contact_list.empty()) {
         std::println("No contacts yet! :(");
         return;
     }
 
-    for (const auto& contact : contact_list)
+    for (const auto &contact : contact_list)
         contact.print_details();
 
     // std::println("{} -> {}", contact.name, contact.phone_number);
@@ -66,11 +66,11 @@ void view_contacts(const std::vector<ContactClass>& contact_list) {
     //     std::println("{}. {} -> {}", i + 1, contact_list[i].name, contact_list[i].phone_number);
 }
 
-void save_contacts(const std::vector<ContactClass>& contacts, const std::string& filename) {
+void save_contacts(const std::vector<ContactClass> &contacts, const std::string &filename) {
     if (std::ofstream contacts_file(filename); !contacts_file.is_open()) {
         std::println("Error: Could not open file {} for saving.", filename);
     } else {
-        for (const auto& contact : contacts) {
+        for (const auto &contact : contacts) {
             contacts_file << "Name: " << contact.get_name() << '\n';
             contacts_file << "Number: " << contact.get_phone_number() << '\n';
         }
@@ -78,7 +78,7 @@ void save_contacts(const std::vector<ContactClass>& contacts, const std::string&
     }
 }
 
-void load_contacts(std::vector<ContactClass>& contacts, const std::string& filename) {
+void load_contacts(std::vector<ContactClass> &contacts, const std::string &filename) {
     std::ifstream contacts_file(filename);
 
     if (!contacts_file.is_open()) {
@@ -90,7 +90,7 @@ void load_contacts(std::vector<ContactClass>& contacts, const std::string& filen
         std::string name_line, number_line, name, number;
         while (std::getline(contacts_file, name_line) && std::getline(contacts_file, number_line)) {
             if (name_line.starts_with("Name: ") && number_line.starts_with("Number: ")) {
-                name   = name_line.substr(6);
+                name = name_line.substr(6);
                 number = number_line.substr(8);
 
                 contacts.emplace_back(name, number);
@@ -103,13 +103,13 @@ void load_contacts(std::vector<ContactClass>& contacts, const std::string& filen
     std::println("Contacts loaded from {}. Total contacts: {}.", filename, contacts.size());
 }
 
-void search_contacts(const std::vector<ContactClass>& contacts) {
+void search_contacts(const std::vector<ContactClass> &contacts) {
     std::string query;
     std::print("Please enter a name or part of it: ");
     std::getline(std::cin, query);
 
     bool is_found = false;
-    for (const auto& contact : contacts) {
+    for (const auto &contact : contacts) {
         if ((contact.get_name().find(query)) != std::string::npos) {
             is_found = true;
             std::println("Name: {}, Phone: {}", contact.get_name(), contact.get_phone_number());
@@ -119,7 +119,7 @@ void search_contacts(const std::vector<ContactClass>& contacts) {
         std::println("No contacts found!");
 }
 
-void edit_contact(std::vector<ContactClass>& contacts) {
+void edit_contact(std::vector<ContactClass> &contacts) {
     if (contacts.empty()) {
         std::println("No contacts to edit!");
         return;
@@ -129,7 +129,7 @@ void edit_contact(std::vector<ContactClass>& contacts) {
     std::getline(std::cin, contact_to_edit);
 
     bool is_edited = false;
-    for (auto& contact : contacts) {
+    for (auto &contact : contacts) {
         if (contact.get_name() == contact_to_edit) {
             std::print("Enter the new number of {}: ", contact_to_edit);
             std::getline(std::cin, new_number);
@@ -142,7 +142,7 @@ void edit_contact(std::vector<ContactClass>& contacts) {
         std::println("No contact edited!");
 }
 
-void delete_contact(std::vector<ContactClass>& contacts) {
+void delete_contact(std::vector<ContactClass> &contacts) {
     if (contacts.empty()) {
         std::println("No contacts to delete!");
         return;
@@ -203,15 +203,32 @@ int main() {
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         switch (static_cast<MenuChoice>(choice)) {
-            case MenuChoice::Add: add_contact(contacts); break;
-            case MenuChoice::View: view_contacts(contacts); break;
-            case MenuChoice::Save: save_contacts(contacts, "contacts.txt"); break;
-            case MenuChoice::Load: load_contacts(contacts, "contacts.txt"); break;
-            case MenuChoice::Edit: edit_contact(contacts); break;
-            case MenuChoice::Delete: delete_contact(contacts); break;
-            case MenuChoice::Search: search_contacts(contacts); break;
-            case MenuChoice::Exit: std::println("Exiting ..."); break;
-            default: std::println("Unknown choice, please select a number between 1 and 8.");
+        case MenuChoice::Add:
+            add_contact(contacts);
+            break;
+        case MenuChoice::View:
+            view_contacts(contacts);
+            break;
+        case MenuChoice::Save:
+            save_contacts(contacts, "contacts.txt");
+            break;
+        case MenuChoice::Load:
+            load_contacts(contacts, "contacts.txt");
+            break;
+        case MenuChoice::Edit:
+            edit_contact(contacts);
+            break;
+        case MenuChoice::Delete:
+            delete_contact(contacts);
+            break;
+        case MenuChoice::Search:
+            search_contacts(contacts);
+            break;
+        case MenuChoice::Exit:
+            std::println("Exiting ...");
+            break;
+        default:
+            std::println("Unknown choice, please select a number between 1 and 8.");
         }
         std::println();
 
